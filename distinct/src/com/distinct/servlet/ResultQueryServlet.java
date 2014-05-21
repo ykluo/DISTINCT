@@ -10,18 +10,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.distinct.database.DBConnect;
+import com.distinct.domain.Author;
+import com.distinct.domain.Publication;
 
 /**
- * Servlet implementation class NameQueryServlet
+ * Servlet implementation class ResultQueryServlet
  */
-@WebServlet("/author/")
-public class NameQueryServlet extends HttpServlet {
+@WebServlet("/paper/")
+public class ResultQueryServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public NameQueryServlet() {
+    public ResultQueryServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -29,18 +31,24 @@ public class NameQueryServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-    
-    private List<String[]> ls;
-    
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		String search = request.getParameter("search");
-		ls = DBConnect.searchByName(search);
-		if (ls != null){
-			request.setAttribute("results", ls);
-			getServletContext().getRequestDispatcher("/results.jsp").forward(request, response);
+		String key = request.getParameter("id");
+		String type = request.getParameter("type");
+		if (type.equals("author")){
+			Author a = DBConnect.searchAuthor(key);
+			List<Publication> lp = DBConnect.getPublications(DBConnect.searchAuthorPaperKeys(key));
+			
+			request.setAttribute("author", a);
+			request.setAttribute("publications", lp);
+			getServletContext().getRequestDispatcher("/author.jsp").forward(request, response);
 		} else {
-			response.sendRedirect("no_result.jsp");
+			Publication p = DBConnect.getPublication(key);
+			List<Author> la = DBConnect.searchAuthorList(key);
+			
+			request.setAttribute("publication", p);
+			request.setAttribute("authors", la);
+			getServletContext().getRequestDispatcher("/paper.jsp").forward(request, response);
 		}
 	}
 

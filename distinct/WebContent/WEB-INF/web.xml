@@ -12,4 +12,36 @@
     <servlet-name>NameQueryServlet</servlet-name>
     <url-pattern>/author</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>ResultQueryServlet</servlet-name>
+    <servlet-class>com.distinct.servlet.ResultQueryServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ResultQueryServlet</servlet-name>
+    <url-pattern>/paper</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>LoginServlet</servlet-name>
+    <servlet-class>com.distinct.servlet.LoginServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>LoginServlet</servlet-name>
+    <url-pattern>/login</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>RequestServlet</servlet-name>
+    <servlet-class>com.distinct.servlet.RequestServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>RequestServlet</servlet-name>
+    <url-pattern>/message</url-pattern>
+  </servlet-mapping>
+  <servlet>
+  	<servlet-name>DecisionServlet</servlet-name>
+  	<servlet-class>com.distinct.servlet.DecisionServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>DecisionServlet</servlet-name>
+  	<url-pattern>/confirm</url-pattern>
+  </servlet-mapping>
 </web-app>

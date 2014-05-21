@@ -1,7 +1,6 @@
 package com.distinct.servlet;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,16 +11,16 @@ import javax.servlet.http.HttpServletResponse;
 import com.distinct.database.DBConnect;
 
 /**
- * Servlet implementation class NameQueryServlet
+ * Servlet implementation class RequestServlet
  */
-@WebServlet("/author/")
-public class NameQueryServlet extends HttpServlet {
+@WebServlet("/message/")
+public class RequestServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public NameQueryServlet() {
+    public RequestServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -29,19 +28,8 @@ public class NameQueryServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-    
-    private List<String[]> ls;
-    
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		String search = request.getParameter("search");
-		ls = DBConnect.searchByName(search);
-		if (ls != null){
-			request.setAttribute("results", ls);
-			getServletContext().getRequestDispatcher("/results.jsp").forward(request, response);
-		} else {
-			response.sendRedirect("no_result.jsp");
-		}
 	}
 
 	/**
@@ -49,6 +37,12 @@ public class NameQueryServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		String id1 = request.getParameter("id1");
+		String id2 = request.getParameter("id2");
+		
+		DBConnect.insertRequest(id1, id2);
+		
+		response.sendRedirect("index.jsp");
 	}
 
 }

@@ -147,3 +147,8 @@ table td, table th {
 	padding: 3px 7px 2px 7px;
 	min-width: 80px;
 }
+
+#side{
+	width: 70%;
+	align: right;
+}

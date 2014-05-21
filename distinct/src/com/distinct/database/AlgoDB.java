@@ -128,4 +128,21 @@ public class AlgoDB extends DBConnect {
 			System.out.println("VendorError: " + e.getErrorCode());
 		}
 	}
+	
+	public static void merge(String id1, String id2) {
+		try {
+			connect();
+			String sql = "CALL MergeAuthor(?,?)";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, Integer.parseInt(id1));
+			pstmt.setInt(2, Integer.parseInt(id2));
+			
+			pstmt.execute();
+			
+		} catch (SQLException e) {
+			System.out.println("SQLException: " + e.getMessage());
+			System.out.println("SQLState: " + e.getSQLState());
+			System.out.println("VendorError: " + e.getErrorCode());
+		}
+	}
 }

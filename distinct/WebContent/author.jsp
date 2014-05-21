@@ -19,56 +19,51 @@
   	<form id="searchBox" method="get" action="author">
 	<input type="text" maxlength="200" size="100" height="50px" name="search">
 	<input id="searchBtn" type="image" value="search" name="SearchBtn" src="img/search_btn_up.jpg" alt="submit">
-	</form>
+	</form> 
 	&nbsp; &nbsp; &nbsp; &nbsp; <a href="/distinct">HOME</a> 
 	&nbsp; &nbsp; &nbsp; &nbsp; <a href="request.jsp">REQUEST</a>
 	&nbsp; &nbsp; &nbsp; &nbsp; <a href="contact.jsp">CONTACTS</a> 
 	</div>
   
-  <div id="main">
-
-  <form id="result" method="get" action="paper">
-  	<input type="hidden" id="req_type" name="type" value="">
-  	<input type="hidden" id="element_id" name="id" value="">
-	  <table>
-	  	<thead>
-		<tr>
-			<th>ID</th>
-			<th>Author</th>
-			<th>Paper Title</th>
-		</tr>
-		</thead>
-		
-		<tbody>
-		<c:forEach var="result" items="${results}" varStatus="loop">
-		<c:choose>
-			<c:when test="${loop.index % 2 == 1 }" >
-			<tr class="d0">
-				<td>${result[0]}</td>
-				<td onclick="document.getElementById('req_type').value='author';document.getElementById('element_id').value='${result[0]}';document.getElementById('result').submit()">${result[1]}</td>
-				<td onclick="document.getElementById('req_type').value='publication';document.getElementById('element_id').value='${result[2]}';document.getElementById('result').submit()">${result[3]}</td>
-			</tr>
-			</c:when>
-			
-			<c:otherwise>
-			<tr class="d1">
-				<td>${result[0]}</td>
-				<td onclick="document.getElementById('req_type').value='author';document.getElementById('element_id').value='${result[0]}';document.getElementById('result').submit()">${result[1]}</td>
-				<td onclick="document.getElementById('req_type').value='publication';document.getElementById('element_id').value='${result[2]}';document.getElementById('result').submit()">${result[3]}</td>
-			</tr>
-			</c:otherwise>
-		</c:choose>
-		</c:forEach>
-		</tbody>
-		
-		</table>
-	</form>
-  
+  <div id="sidebar">
+    <h1>${author.getName() }</h1>
   </div>
+  
+  <div id="main">
+  	<form id="author" method="get" action="paper">
+  		<input type="hidden" id="req_type" name="type" value="">
+  		<input type="hidden" id="element_id" name="id" value="">
+  		<table id="side">
+  			<thead>
+  			<tr><th>Paper Published</th></tr>
+  			</thead>
+  			
+  			<tbody>
+  			<c:forEach var="pub" items="${publications }" varStatus="loop" >
+  			<c:choose>
+  				<c:when test="${loop.index % 2 == 1 }">
+  				<tr class="d0">
+  					<td onclick="document.getElementById('req_type').value='publication';document.getElementById('element_id').value='${pub.getKey()}';document.getElementById('author').submit()">${pub.getTitle() }</td>
+  				</tr>
+  				</c:when>
+  				
+  				<c:otherwise>
+  				<tr class="d1">
+  					<td onclick="document.getElementById('req_type').value='publication';document.getElementById('element_id').value='${pub.getKey()}';document.getElementById('author').submit()">${pub.getTitle() }</td>
+  				</tr>
+  				</c:otherwise>
+  			</c:choose>
+  			</c:forEach>
+  			</tbody>
+  		</table>
+  	</form>
+  </div>
+  
   <div id="footer"> &copy;2014 Distinct People Repository &nbsp;<span class="separator">|</span>
   &nbsp; Design by <a href="http://www.realitysoftware.ca">Reality Software</a> 
   </div>
 </div>
 <div align=center>Website powered by <a href='http://all-free-download.com/free-website-templates/'>free website templates</a></div></body>
+
 
 </html>

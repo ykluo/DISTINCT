@@ -130,13 +130,12 @@ public class DBConnect {
 			pstmt.setString(1, s);
 			rs = pstmt.executeQuery();
 			
+			
 			List<String[]> r = new ArrayList<String[]>();
-			rs.next();
-			while (!rs.isLast()) {
+			while (rs.next()) {
 				String[] temp = {Integer.toString(rs.getInt("author_key")), rs.getString("author_name"),
 						rs.getString("paper_key"), rs.getString("title")};
 				r.add(temp);
-				rs.next();
 			}
 			return r;
 		} catch (SQLException ex) {
@@ -145,6 +144,263 @@ public class DBConnect {
 			System.out.println("VendorError: " + ex.getErrorCode());
 			return null;
 		} 
+	}
+	
+	public static List<String> searchAuthorPaperKeys(String id) {
+		try {
+			List<String> ls = new ArrayList<String>();
+			
+			connect();
+			String query = "SELECT * FROM publish WHERE author_key=?";
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, Integer.parseInt(id));
+			rs = pstmt.executeQuery();
+			
+			while (rs.next()){
+				ls.add(rs.getString("paper_key"));
+			}
+			return ls;
+		} catch (SQLException ex) {
+			System.out.println("SQLException: " + ex.getMessage());
+			System.out.println("SQLState: " + ex.getSQLState());
+			System.out.println("VendorError: " + ex.getErrorCode());
+			return null;
+		}
+	}
+	
+	public static Author searchAuthor(String id) {
+		try {
+			connect();
+			String query = "SELECT * FROM author WHERE author_key=?";
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, Integer.parseInt(id));
+			rs = pstmt.executeQuery();
+			
+			if (rs.next()){
+				Author auth = new Author(rs.getString("author_name"), rs.getInt("author_key"));
+				return auth;
+			} else
+				return null;
+			
+		} catch (SQLException ex) {
+			System.out.println("SQLException: " + ex.getMessage());
+			System.out.println("SQLState: " + ex.getSQLState());
+			System.out.println("VendorError: " + ex.getErrorCode());
+			return null;
+		}
+	}
+	
+	public static List<Publication> getPublications(List<String> ids) {
+		try {
+			connect();
+			List<Publication> lp = new ArrayList<Publication>();
+			for (int i = 0; i < ids.size(); i ++){
+				String id = ids.get(i);
+				String query = "SELECT * FROM publications WHERE paper_key=?";
+				pstmt = conn.prepareStatement(query);
+				pstmt.setString(1, id);
+				rs = pstmt.executeQuery();
+				if (rs.next()){
+					lp.add(new Publication(rs.getString("paper_key"), rs.getString("title")));
+				}
+			}
+			
+			return lp;
+		} catch (SQLException ex) {
+			System.out.println("SQLException: " + ex.getMessage());
+			System.out.println("SQLState: " + ex.getSQLState());
+			System.out.println("VendorError: " + ex.getErrorCode());
+			return null;
+		}
+	}
+	
+	public static Publication getPublication(String id) {
+		try {
+			connect();
+			String query = "SELECT * FROM publications WHERE paper_key=?";
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, id);
+			rs = pstmt.executeQuery();
+			
+			if (rs.next()){
+				Publication pub = new Publication(rs.getString("paper_key"), rs.getString("title"));
+				pub.setProcKey(rs.getString("proc_key"));
+				return pub;
+			} else
+				return null;
+			
+		} catch (SQLException ex) {
+			System.out.println("SQLException: " + ex.getMessage());
+			System.out.println("SQLState: " + ex.getSQLState());
+			System.out.println("VendorError: " + ex.getErrorCode());
+			return null;
+		}
+	}
+	
+	public static List<Author> searchAuthorList(String id) {
+		try {
+			connect();
+			List<String> ids = getAuthorListKeys(id);
+			List<Author> la = new ArrayList<Author>();
+			
+			for (int i = 0; i < ids.size(); i ++){
+				String aid = ids.get(i);
+				String query = "SELECT * FROM author WHERE author_key=?";
+				pstmt = conn.prepareStatement(query);
+				pstmt.setInt(1, Integer.parseInt(aid));
+				rs = pstmt.executeQuery();
+				
+				if (rs.next()){
+					la.add(new Author(rs.getString("author_name"), rs.getInt("author_key")));
+				}
+			}
+			
+			
+			return la;
+			
+		} catch (SQLException ex) {
+			System.out.println("SQLException: " + ex.getMessage());
+			System.out.println("SQLState: " + ex.getSQLState());
+			System.out.println("VendorError: " + ex.getErrorCode());
+			return null;
+		}
+	}
+	
+	static List<String> getAuthorListKeys(String id) {
+		try {
+			List<String> ls = new ArrayList<String>();
+			connect();
+			
+			String query = "SELECT * FROM publish WHERE paper_key=?";
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, id);
+			rs = pstmt.executeQuery();
+			
+			while (rs.next()){
+				ls.add(rs.getString("author_key"));
+			}
+			
+			return ls;
+			
+		} catch (SQLException ex) {
+			System.out.println("SQLException: " + ex.getMessage());
+			System.out.println("SQLState: " + ex.getSQLState());
+			System.out.println("VendorError: " + ex.getErrorCode());
+			return null;
+		}
+	}
+	
+	public static boolean checkUserLogin(String uname, String passwd) {
+		try {
+			connect();
+			String query = "SELECT * FROM users WHERE user_id=? AND password=?";
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, uname);
+			pstmt.setString(2, passwd);
+			rs = pstmt.executeQuery();
+			
+			return rs.next();
+		} catch (SQLException ex) {
+			System.out.println("SQLException: " + ex.getMessage());
+			System.out.println("SQLState: " + ex.getSQLState());
+			System.out.println("VendorError: " + ex.getErrorCode());
+			return false;
+		}
+	}
+	
+	public static void insertRequest(String id1, String id2) {
+		try {
+			connect();
+			String sql = "INSERT INTO messages(id1, id2) values(?,?)";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id1);
+			pstmt.setString(2, id2);
+			pstmt.execute();
+			
+		} catch (SQLException ex) {
+			System.out.println("SQLException: " + ex.getMessage());
+			System.out.println("SQLState: " + ex.getSQLState());
+			System.out.println("VendorError: " + ex.getErrorCode());
+		}
+	}
+	
+	public static List<String[]> getAuthors() {
+		try {
+			List<String[]> ls = new ArrayList<String[]>();
+			
+			String sql = "SELECT * FROM messages WHERE handled=0";
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			
+			while (rs.next()) {
+				String id1 = rs.getString("id1");
+				String id2 = rs.getString("id2");
+				String id = Integer.toString(rs.getInt("message_id"));
+//				String name1 = searchAuthorName(id1);
+//				String name2 = searchAuthorName(id2);
+				
+				
+				String[] temp = {id1, id2, id};
+				
+				ls.add(temp);
+			}
+			
+			return ls;
+		} catch (SQLException ex) {
+			System.out.println("SQLException: " + ex.getMessage());
+			System.out.println("SQLState: " + ex.getSQLState());
+			System.out.println("VendorError: " + ex.getErrorCode());
+			return null;
+		}
+	}
+	
+	public static String searchAuthorName(String id) {
+		try {
+			String query = "SELECT author_name FROM author WHERE author_key=?";
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, Integer.parseInt(id));
+			rs = pstmt.executeQuery();
+			
+			if (rs.next()) {
+				return rs.getString("author_name");
+			} else
+				return null;
+		} catch (SQLException ex) {
+			System.out.println("SQLException: " + ex.getMessage());
+			System.out.println("SQLState: " + ex.getSQLState());
+			System.out.println("VendorError: " + ex.getErrorCode());
+			return null;
+		}
+	}
+	
+	public static String[] readMessage(String mid) {
+		try {
+			connect();
+			String sql = "UPDATE messages SET handled=1 WHERE message_id=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, Integer.parseInt(mid));
+			pstmt.execute();
+			
+			sql = "SELECT * FROM messages WHERE message_id=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, Integer.parseInt(mid));
+			rs = pstmt.executeQuery();
+			
+			
+			if (rs.next()){
+				String[] ret = {rs.getString("id1"), rs.getString("id2")};
+				return ret;
+			} else {
+				return null;
+			}
+			
+			
+		} catch (SQLException ex) {
+			System.out.println("SQLException: " + ex.getMessage());
+			System.out.println("SQLState: " + ex.getSQLState());
+			System.out.println("VendorError: " + ex.getErrorCode());
+			return null;
+		}
 	}
 
 }

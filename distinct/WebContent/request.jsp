@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -18,31 +19,35 @@
   	<form id="searchBox" method="get" action="author">
 	<input type="text" maxlength="200" size="100" height="50px" name="search">
 	<input id="searchBtn" type="image" value="search" name="SearchBtn" src="img/search_btn_up.jpg" alt="submit">
-	</form> 
+	</form>
 	&nbsp; &nbsp; &nbsp; &nbsp; <a href="/distinct">HOME</a> 
 	&nbsp; &nbsp; &nbsp; &nbsp; <a href="request.jsp">REQUEST</a>
 	&nbsp; &nbsp; &nbsp; &nbsp; <a href="contact.jsp">CONTACTS</a> 
 	</div>
-	
-  <div id="sidebar">
-    <h1>Introduction</h1>
-    <p>This is an introduction paragraph...
-    </p>
-  </div>
-  <div id="main">
+
+	<div id="main">
+	<p>Please input two author IDs that you believe refer to a same person.</p>
+	<form id="req" method="post" action="message">
+		<table style="border: 0px">
+			<tr>
+				<td>Author 1 ID:</td>
+				<td><input type="text" maxlength="50" size="30" height="50px" name="id1"></td>
+			</tr>
+			<tr>
+				<td>Author 2 ID:</td>
+				<td><input type="text" maxlength="50" size="30" height="50px" name="id2"></td>
+			</tr>
+		</table>
+		<input type="submit" name="reqBtn" value="Submit">
+		<input type="reset" value="Reset">
+	</form>
+	</div>
   
-    <p><b>Distinct People Repository</b> is a test people and articles repository based on 
-    <a target="_blank" href="http://dblp.uni-trier.de/db/">DBLP Database</a>. All data are from DBLP XML file and can be download from 
-    <a target="_blank" href="http://dblp.uni-trier.de/xml/">here</a>.
-    </p>
-    
-    <h2>About DISTINCT Algorithm</h2>
-    <p>Something about the algorithm...</p>
-    <h2>About this Repository</h2>
-    <p>Introductions about this website...</p>
-    
+  <div id="footer"> &copy;2014 Distinct People Repository &nbsp;<span class="separator">|</span>
+  &nbsp; Design by <a href="http://www.realitysoftware.ca">Reality Software</a> 
   </div>
-  <div id="footer"> &copy;2014 Distinct People Repository &nbsp;<span class="separator">|</span>&nbsp; Design by <a href="http://www.realitysoftware.ca">Reality Software</a> </div>
 </div>
 <div align=center>Website powered by <a href='http://all-free-download.com/free-website-templates/'>free website templates</a></div></body>
+
+
 </html>
